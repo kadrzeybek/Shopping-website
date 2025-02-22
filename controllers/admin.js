@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Category = require('../models/category');
+const product = require('../models/product');
 
 exports.getProducts = (req, res, next) => {
     Product.find()
@@ -58,29 +59,28 @@ exports.getEditProduct = (req, res, next) => {
 
     Product.findById(req.params.productid)
         .then(product => {
-            Category.findAll()
-                .then(categories => {
+            res.render('admin/edit-product', {
+                title: 'Edit Product',
+                path: '/admin/products',
+                product: product,
+                
+            });
+            //Category.findAll()
+                // .then(categories => {
 
-                    categories = categories.map(category => {
+                //     categories = categories.map(category => {
 
-                        if (product.categories) {
-                            product.categories.find(item => {
-                                if (item == category._id) {
-                                    category.selected = true;
-                                }
-                            })
-                        }
+                //         if (product.categories) {
+                //             product.categories.find(item => {
+                //                 if (item == category._id) {
+                //                     category.selected = true;
+                //                 }
+                //             })
+                //         }
 
-                        return category;
-                    });
-
-                    res.render('admin/edit-product', {
-                        title: 'Edit Product',
-                        path: '/admin/products',
-                        product: product,
-                        categories: categories
-                    });
-                });
+                //         return category;
+                //     });
+                
         })
         .catch(err => { console.log(err) });
 
@@ -95,13 +95,32 @@ exports.postEditProduct = (req, res, next) => {
     const description = req.body.description;
     const categories = req.body.categoryids;
 
-    const product = new Product(name, price, description, imageUrl, categories, id, req.user._id);
-
-    product.save()
-        .then(result => {
+    Product.updateOne({ _id : id }, {
+        $set:{
+            name: name,
+            price: price,
+            imageUrl: imageUrl,
+            description: description,
+        }
+    })
+        .then(() =>{
             res.redirect('/admin/products?action=edit');
         })
         .catch(err => console.log(err));
+/*
+    Product.findById(id)
+        .then(product =>{
+            product.name = name;
+            product.price = price;
+            product.imageUrl = imageUrl;
+            product.description = description;
+            return product.save()
+        })
+        .then(() =>{
+            res.redirect('/admin/products?action=edit');
+        })
+        .catch(err => console.log(err));
+*/
 }
 
 exports.postDeleteProduct = (req, res, next) => {

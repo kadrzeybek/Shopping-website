@@ -4,15 +4,21 @@ const Category = require('../models/category');
 exports.getIndex = (req, res, next) => {
     Product.find()
         .then(products => {
-            Category.findAll()
-                .then(categories => {
-                    res.render('shop/index', {
-                        title: 'Shopping',
-                        products: products,
-                        path: '/',
-                        categories: categories
-                    });
-                })
+            res.render('shop/index', {
+                title: 'Shopping',
+                products: products,
+                path: '/',
+                
+            });
+            // Category.findAll()
+            //     .then(categories => {
+            //         res.render('shop/index', {
+            //             title: 'Shopping',
+            //             products: products,
+            //             path: '/',
+            //             categories: categories
+            //         });
+            //     })
         })
         .catch((err) => {
             console.log(err);
@@ -31,7 +37,7 @@ exports.getProducts = (req, res, next) => {
         //.find({price:{$lte:2000}}) less than or equals
         //.find({price:{$in:[2000,3000,4000]}}) in
         //.find({price:{$gte:2000,$lte:4000}}) between
-        
+
         //.or([{price:{$gt:2000},$name:'Samsung S6'}])
 
         //search start with
