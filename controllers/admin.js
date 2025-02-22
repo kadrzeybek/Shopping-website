@@ -32,7 +32,7 @@ exports.postAddProduct = (req, res, next) => {
 
     const name = req.body.name;
     const price = req.body.price;
-    const ageUrl = req.body.imageUrl;
+    const imageUrl = req.body.imageUrl;
     const description = req.body.description;
 
     const product = new Product(
@@ -127,7 +127,7 @@ exports.postDeleteProduct = (req, res, next) => {
 
     const id = req.body.productid;
 
-    Product.deleteById(id)
+    Product.deleteOne({_id: id})
         .then(() => {
             console.log('product has been deleted.');
             res.redirect('/admin/products?action=delete');
