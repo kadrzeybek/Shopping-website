@@ -19,18 +19,17 @@ const User = require('./models/user');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-/*
+
 app.use((req, res, next) => {
-    User.findByUserName('kadirzeybek')
+    User.findOne('kadirzeybek')
         .then(user => {
-            req.user = new User(user.name, user.email, user.cart, user._id);
+            req.user = user;
             console.log(req.user);
             next();
         })
         .catch(err => { console.log(err) });
 })
 
-*/
 
 app.use('/admin', adminRoutes);
 app.use(userRoutes);
@@ -60,7 +59,26 @@ mongoConnect(() => {
 mongoose.connect('mongodb+srv://kadrzeybek:TApfH.rNw-EwSN4@cluster0.8q9oz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => {
         console.log('connected to mongodb');
-        app.listen(3000);
+
+        User.findOne({name:'kadrzeybek'})
+        .then(user => {
+            if (!user) {
+                user = new User({
+                    name:'kadrzeybek',
+                    email: 'email@kadrzeybek.com',
+                    cart:{
+                        items: []
+                    }
+                });
+                return user.save();
+            }
+            return user;
+        })
+        .then(user => {
+            console.log(user);
+            app.listen(3000);
+        })
+        .catch(err => { console.log(err) });
     })
     .catch(err => {
         console.log(err);
