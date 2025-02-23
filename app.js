@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use((req, res, next) => {
-    User.findOne('kadirzeybek')
+    User.findOne({name:'kadirzeybek'})
         .then(user => {
             req.user = user;
             console.log(req.user);
