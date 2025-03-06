@@ -15,6 +15,7 @@ const userSchema = mongoose.Schema({
             {
                 productId: {
                     type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Product',
                     required: true
                 }
             }
@@ -22,7 +23,7 @@ const userSchema = mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('user', userSchema)
+module.exports = mongoose.model('User', userSchema)
 // const getDb = require('../utility/database').getdb;
 // const mongodb = require('mongodb');
 

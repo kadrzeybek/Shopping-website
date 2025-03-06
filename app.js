@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use((req, res, next) => {
-    User.findOne({name:'kadirzeybek'})
+    User.findOne({name:'kadrzeybek'})
         .then(user => {
             req.user = user;
             console.log(req.user);
@@ -56,7 +56,7 @@ mongoConnect(() => {
 
 */
 
-mongoose.connect('mongodb+srv://kadrzeybek:TApfH.rNw-EwSN4@cluster0.8q9oz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect('mongodb+srv://kadrzeybek:TApfH.rNw-EwSN4@shoppingdata.8q9oz.mongodb.net/SHOPPING_DATABASE?retryWrites=true&w=majority&appName=ShoppingData')
     .then(() => {
         console.log('connected to mongodb');
 
