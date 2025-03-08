@@ -2,11 +2,12 @@ const Product = require('../models/product');
 const Category = require('../models/category');
 const product = require('../models/product');
 const user = require('../models/user');
+const category = require('../models/category');
 
 exports.getProducts = (req, res, next) => {
     Product.find()
         .populate('userId', 'name -_id')
-        .select('name price userId')
+        .select('name price imageUrl userId')
         //.find({name:'Nokia 3310'})
         //.limit(10)
         //.select({name: 1, price:1, description: 0})
@@ -62,13 +63,35 @@ exports.postAddProduct = (req, res, next) => {
 exports.getEditProduct = (req, res, next) => {
 
     Product.findById(req.params.productid)
+        //.populate('categories')
         .then(product => {
-            res.render('admin/edit-product', {
-                title: 'Edit Product',
-                path: '/admin/products',
-                product: product,
-                
-            });
+            console.log(product);
+            return product
+        })
+        .then(product => { 
+            Category.find()
+                .then(categories => {
+
+                    categories = categories.map(category =>{
+
+                        if(product.categories){
+                            product.categories.find(item =>{
+                                if(item.toString() === category._id.toString()){
+                                    category.selected = true
+                                }
+                            })
+                        }
+
+                        return category;
+                    })
+                    res.render('admin/edit-product', {
+                        title: 'Edit Product',
+                        path: '/admin/products',
+                        product: product,
+                        categories : categories
+                    })
+                })
+            
             //Category.findAll()
                 // .then(categories => {
 
@@ -98,6 +121,7 @@ exports.postEditProduct = (req, res, next) => {
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
     const categories = req.body.categoryids;
+    const ids = req.body.categoryids;
 
     Product.updateOne({ _id : id }, {
         $set:{
@@ -105,6 +129,7 @@ exports.postEditProduct = (req, res, next) => {
             price: price,
             imageUrl: imageUrl,
             description: description,
+            categories: ids
         }
     })
         .then(() =>{

@@ -5,7 +5,6 @@ block styles
 
 block content
     form(action="/admin/products" method="POST")
- 
         input(type="hidden" name="id" value=`${product._id}`)
 
         .form-group.row
@@ -23,13 +22,13 @@ block content
             .col-sm-10
                 input.form-control#image(type="text" name="imageUrl"  value=`${product.imageUrl}`) 
 
-        //- .form-group.row
-        //-     label(for="categoryid").col-sm-2.col-form-label Category
-        //-     .col-sm-10
-        //-          each category in categories
-        //-             input(type="checkbox" name="categoryids" value=`${category._id}` checked=category.selected) 
-        //-             | #{category.name}
-        //-             br
+        .form-group.row
+            label(for="categoryid").col-sm-2.col-form-label Category
+            .col-sm-10
+                each category in categories
+                    input(type="checkbox" name="categoryids" value=`${category._id}` checked=category.selected) 
+                    | #{category.name}
+                    br
         .form-group.row
             label(for="description").col-sm-2.col-form-label Description
             .col-sm-10
