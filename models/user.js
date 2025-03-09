@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
-const product = require('./product');
 
 const userSchema = mongoose.Schema({
-    name:{
+    name: {
         type: String,
         required: true
     },
-    email:{
+    email: {
         type: String,
         required: true
     },
@@ -17,13 +16,42 @@ const userSchema = mongoose.Schema({
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'Product',
                     required: true
+                },
+                quantity: {  // Hatalı yazım düzeltildi
+                    type: Number,
+                    required: true
                 }
             }
         ]
     }
-})
+});
 
-module.exports = mongoose.model('User', userSchema)
+// Kullanıcıya sepete ürün ekleme metodu ekleniyor
+userSchema.methods.addToCart = function(product) {
+    const index = this.cart.items.findIndex(cp => 
+        cp.productId.toString() === product._id.toString()
+    );
+
+    const updatedCartItems = [...this.cart.items];
+
+    if (index >= 0) {
+        // Ürün zaten sepette, quantity artır
+        updatedCartItems[index].quantity += 1;
+    } else {
+        // Yeni ürün ekle
+        updatedCartItems.push({
+            productId: product._id,
+            quantity: 1
+        });
+    }
+
+    this.cart = { items: updatedCartItems };
+    return this.save();
+}
+
+module.exports = mongoose.model('User', userSchema);
+
+
 // const getDb = require('../utility/database').getdb;
 // const mongodb = require('mongodb');
 

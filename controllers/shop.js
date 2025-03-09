@@ -1,6 +1,6 @@
 const Product = require('../models/product');
 const Category = require('../models/category');
-const product = require('../models/product');
+const product = require('../models/user');
 
 exports.getIndex = (req, res, next) => {
     Product.find()
